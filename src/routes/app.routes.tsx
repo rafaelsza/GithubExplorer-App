@@ -2,7 +2,7 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import Dashboard from '../pages/Dashboard';
-import Repository from '../pages/Repository';
+import RepositoryDetails from '../pages/RepositoryDetails';
 
 const App = createStackNavigator();
 
@@ -14,7 +14,7 @@ const AppRoutes: React.FC = () => (
     }}
   >
     <App.Screen name="Dashboard" component={Dashboard} />
-    <App.Screen name="Repository" component={Repository} />
+    <App.Screen name="RepositoryDetails" component={RepositoryDetails} />
   </App.Navigator>
 );
 
