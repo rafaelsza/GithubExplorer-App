@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from 'react';
+/* eslint-disable camelcase */
+
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   ImageBackground,
   Image,
   FlatList,
   ActivityIndicator,
   TouchableOpacity,
+  Linking,
 } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
@@ -33,9 +36,9 @@ import {
 } from './styles';
 
 interface Issue {
-  id: string;
+  id: number;
   title: string;
-  htmlUrl: string;
+  html_url: string;
   user: {
     login: string;
   };
@@ -58,23 +61,20 @@ const RepositoryDetails: React.FC = () => {
 
   useEffect(() => {
     async function loadIssues() {
-      const response = await api.get(`repos/${repository.fullName}/issues`);
+      const response = await api.get<Issue[]>(
+        `repos/${repository.full_name}/issues`,
+      );
 
-      const issuesResponse: Issue[] = response.data.map(issue => ({
-        id: issue.id,
-        title: issue.title,
-        htmlUrl: issue.html_url,
-        user: {
-          login: issue.user.login,
-        },
-      }));
-
-      setIssues(issuesResponse);
+      setIssues(response.data);
       setLoading(false);
     }
 
     loadIssues();
-  }, [repository.fullName]);
+  }, [repository.full_name]);
+
+  const handleOpenUrl = useCallback(async (url: string) => {
+    await Linking.openURL(url);
+  }, []);
 
   return (
     <ImageBackground
@@ -89,11 +89,11 @@ const RepositoryDetails: React.FC = () => {
         <ViewRepository>
           <ImageRepository
             source={{
-              uri: repository.owner.avatarUrl,
+              uri: repository.owner.avatar_url,
             }}
           />
           <DataRepository>
-            <TitleRepository>{repository.fullName}</TitleRepository>
+            <TitleRepository>{repository.full_name}</TitleRepository>
             <DescriptionRepository>
               {repository.description}
             </DescriptionRepository>
@@ -101,15 +101,15 @@ const RepositoryDetails: React.FC = () => {
         </ViewRepository>
         <ViewData>
           <ViewItemData>
-            <ValueItemData>{repository.counts.stargazersCount}</ValueItemData>
+            <ValueItemData>{repository.stargazers_count}</ValueItemData>
             <TitleItemData>Stars</TitleItemData>
           </ViewItemData>
           <ViewItemData>
-            <ValueItemData>{repository.counts.forksCount}</ValueItemData>
+            <ValueItemData>{repository.forks_count}</ValueItemData>
             <TitleItemData>Forks</TitleItemData>
           </ViewItemData>
           <ViewItemData>
-            <ValueItemData>{repository.counts.openIssuesCount}</ValueItemData>
+            <ValueItemData>{repository.open_issues_count}</ValueItemData>
             <TitleItemData>Open issues</TitleItemData>
           </ViewItemData>
           <TouchableOpacity
@@ -132,15 +132,14 @@ const RepositoryDetails: React.FC = () => {
           style={{ paddingHorizontal: 16 }}
           keyExtractor={issue => issue.id.toString()}
           renderItem={({ item: issue }) => (
-            <ItemList>
-              {{
-                title: issue.title,
-                description: issue.user.login,
-                icon: 'external-link',
-                onClick: 'openExternalUrl',
-                externalUrl: issue.htmlUrl,
+            <ItemList
+              title={issue.title}
+              description={issue.user.login}
+              iconRight="external-link"
+              onPress={() => {
+                handleOpenUrl(issue.html_url);
               }}
-            </ItemList>
+            />
           )}
         />
       )}

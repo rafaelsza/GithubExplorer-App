@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { ImageBackground, Image, FlatList, Keyboard } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 import { useRepository } from '../../hooks/repositories';
 
@@ -18,8 +19,8 @@ import {
 } from './styles';
 
 const Dashboard: React.FC = () => {
+  const navigation = useNavigation();
   const [valueSearch, setValueSearch] = useState<string>('');
-
   const { repositories, addRepository } = useRepository();
 
   const handleAddRepository = useCallback(async () => {
@@ -61,18 +62,17 @@ const Dashboard: React.FC = () => {
       <FlatList
         data={repositories}
         style={{ paddingHorizontal: 16 }}
-        keyExtractor={repository => repository.id}
+        keyExtractor={repository => repository.id.toString()}
         renderItem={({ item: repository }) => (
-          <ItemList>
-            {{
-              imageUrl: repository.owner.avatarUrl,
-              title: repository.fullName,
-              description: repository.description,
-              icon: 'chevron-right',
-              item: repository,
-              onClick: 'openRepositoryDetails',
+          <ItemList
+            imageUrl={repository.owner.avatar_url}
+            title={repository.full_name}
+            description={repository.description}
+            iconRight="chevron-right"
+            onPress={() => {
+              navigation.navigate('RepositoryDetails', { repository });
             }}
-          </ItemList>
+          />
         )}
       />
     </ImageBackground>

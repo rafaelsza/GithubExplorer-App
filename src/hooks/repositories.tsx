@@ -1,3 +1,5 @@
+/* eslint-disable camelcase */
+
 import React, {
   createContext,
   useContext,
@@ -6,7 +8,6 @@ import React, {
   useMemo,
   useEffect,
 } from 'react';
-import uuid from 'react-native-uuid';
 
 import { Alert } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -14,24 +15,22 @@ import AsyncStorage from '@react-native-community/async-storage';
 import api from '../services/api';
 
 export interface Repository {
-  id: string;
-  fullName: string;
+  id: number;
+  full_name: string;
   description: string;
-  counts: {
-    stargazersCount: number;
-    forksCount: number;
-    openIssuesCount: number;
-  };
+  stargazers_count: number;
+  forks_count: number;
+  open_issues_count: number;
   owner: {
     login: string;
-    avatarUrl: string;
+    avatar_url: string;
   };
 }
 
 interface RepositoryContext {
   repositories: Repository[];
   addRepository(input: string): Promise<boolean>;
-  removeRepository(id: string): void;
+  removeRepository(id: number): void;
 }
 
 const RepositoryContext = createContext<RepositoryContext>(
@@ -58,29 +57,14 @@ const RepositoryProvider: React.FC = ({ children }) => {
   const addRepository = useCallback(
     async (input: string): Promise<boolean> => {
       try {
-        const response = await api.get(`repos/${input}`);
-
-        const repository: Repository = {
-          id: uuid.v4(),
-          fullName: response.data.full_name,
-          description: response.data.description,
-          counts: {
-            stargazersCount: response.data.stargazers_count,
-            forksCount: response.data.forks_count,
-            openIssuesCount: response.data.open_issues_count,
-          },
-          owner: {
-            login: response.data.owner.login,
-            avatarUrl: response.data.owner.avatar_url,
-          },
-        };
+        const response = await api.get<Repository>(`repos/${input}`);
 
         await AsyncStorage.setItem(
           '@GithubExplorerApp:repositories',
-          JSON.stringify([...repositories, repository]),
+          JSON.stringify([...repositories, response.data]),
         );
 
-        setRepositories([...repositories, repository]);
+        setRepositories([...repositories, response.data]);
 
         return true;
       } catch (error) {
@@ -94,7 +78,7 @@ const RepositoryProvider: React.FC = ({ children }) => {
   );
 
   const removeRepository = useCallback(
-    async (id: string) => {
+    async (id: number) => {
       setRepositories(state =>
         state.filter(repository => repository.id !== id),
       );
