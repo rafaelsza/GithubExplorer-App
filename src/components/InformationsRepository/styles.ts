@@ -1,16 +1,11 @@
 import styled from 'styled-components/native';
 import { ImageProps } from 'react-native';
 
-export const Container = styled.TouchableOpacity`
-  width: 100%;
+export const Container = styled.View`
+  flex: 1;
   height: auto;
-  padding: 16px;
   flex-direction: row;
-  margin-bottom: 10px;
   align-items: center;
-
-  background: #fff;
-  border-radius: 3px;
 `;
 
 export const Image = styled.Image<ImageProps>`
@@ -23,7 +18,7 @@ export const Image = styled.Image<ImageProps>`
 export const TitleAndDescriptionContainer = styled.View`
   flex: 1;
   height: auto;
-  justify-content: space-evenly;
+  justify-content: space-between;
   padding: 0 5px 0 0;
 `;
 

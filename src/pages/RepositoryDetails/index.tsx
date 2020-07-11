@@ -19,6 +19,7 @@ import api from '../../services/api';
 import logoBackground from '../../assets/github-background.png';
 import logoHeader from '../../assets/logo.png';
 
+import InformationsRepository from '../../components/InformationsRepository';
 import ItemList from '../../components/ItemList';
 
 import {
@@ -87,6 +88,14 @@ const RepositoryDetails: React.FC = () => {
         <Image source={logoHeader} />
 
         <ViewRepository>
+          <InformationsRepository
+            image={{ url: repository.owner.avatar_url, width: 84, height: 84 }}
+            title={repository.full_name}
+            description={repository.description}
+          />
+        </ViewRepository>
+
+        {/* <ViewRepository>
           <ImageRepository
             source={{
               uri: repository.owner.avatar_url,
@@ -98,7 +107,7 @@ const RepositoryDetails: React.FC = () => {
               {repository.description}
             </DescriptionRepository>
           </DataRepository>
-        </ViewRepository>
+        </ViewRepository> */}
         <ViewData>
           <ViewItemData>
             <ValueItemData>{repository.stargazers_count}</ValueItemData>
