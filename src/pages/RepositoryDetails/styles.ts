@@ -6,31 +6,15 @@ export const Container = styled.View`
 `;
 
 export const ViewRepository = styled.View`
-  flex-direction: row;
-  padding: 32px 0 0 0;
+  height: 200px;
+  flex-direction: column;
+  padding: 16px 0 16px 0;
 `;
 
-export const ViewData = styled.View`
+export const ViewCountsData = styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-
-  padding: 16px 0;
-`;
-
-export const ViewItemData = styled.View`
-  flex-direction: column;
-`;
-
-export const ValueItemData = styled.Text`
-  font-size: 18px;
-  font-weight: bold;
-  color: #3d3d4d;
-`;
-
-export const TitleItemData = styled.Text`
-  color: #a8a8b3;
-  font-size: 14px;
 `;
 
 export const TitleHeaderIssues = styled.Text`

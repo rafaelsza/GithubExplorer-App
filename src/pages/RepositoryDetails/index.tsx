@@ -25,10 +25,7 @@ import ItemList from '../../components/ItemList';
 import {
   Container,
   ViewRepository,
-  ViewData,
-  ViewItemData,
-  TitleItemData,
-  ValueItemData,
+  ViewCountsData,
   TitleHeaderIssues,
 } from './styles';
 
@@ -55,6 +52,12 @@ const RepositoryDetails: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [colorFavoriteButton, setColorFavoriteButton] = useState('red');
 
+  const counts = [
+    { title: 'Stars', value: repository.stargazers_count },
+    { title: 'Forks', value: repository.forks_count },
+    { title: 'Open issues', value: repository.open_issues_count },
+  ];
+
   useEffect(() => {
     async function loadIssues() {
       const response = await api.get<Issue[]>(
@@ -67,10 +70,6 @@ const RepositoryDetails: React.FC = () => {
 
     loadIssues();
   }, [repository.full_name]);
-
-  const handleOpenUrl = useCallback(async (url: string) => {
-    await Linking.openURL(url);
-  }, []);
 
   return (
     <ImageBackground
@@ -88,31 +87,33 @@ const RepositoryDetails: React.FC = () => {
             title={repository.full_name}
             description={repository.description}
           />
-        </ViewRepository>
 
-        <ViewData>
-          <ViewItemData>
-            <ValueItemData>{repository.stargazers_count}</ValueItemData>
-            <TitleItemData>Stars</TitleItemData>
-          </ViewItemData>
-          <ViewItemData>
-            <ValueItemData>{repository.forks_count}</ValueItemData>
-            <TitleItemData>Forks</TitleItemData>
-          </ViewItemData>
-          <ViewItemData>
-            <ValueItemData>{repository.open_issues_count}</ValueItemData>
-            <TitleItemData>Open issues</TitleItemData>
-          </ViewItemData>
-          <TouchableOpacity
-            activeOpacity={1.0}
-            onPress={() => {
-              removeRepository(repository.id);
-              setColorFavoriteButton('#a8a8b3');
-            }}
-          >
-            <FeatherIcon name="heart" size={20} color={colorFavoriteButton} />
-          </TouchableOpacity>
-        </ViewData>
+          <ViewCountsData>
+            {counts.map(count => {
+              return (
+                <ContentItem
+                  key={count.title}
+                  title={count.value.toString()}
+                  description={count.title}
+                />
+              );
+            })}
+            <TouchableOpacity
+              activeOpacity={1.0}
+              onPress={() => {
+                removeRepository(repository.id);
+                setColorFavoriteButton('#a8a8b3');
+              }}
+            >
+              <FeatherIcon
+                name="heart"
+                size={20}
+                color={colorFavoriteButton}
+                style={{ marginRight: 20, marginLeft: 50 }}
+              />
+            </TouchableOpacity>
+          </ViewCountsData>
+        </ViewRepository>
         <TitleHeaderIssues>Open issues</TitleHeaderIssues>
       </Container>
       {loading ? (
@@ -128,7 +129,6 @@ const RepositoryDetails: React.FC = () => {
               description={issue.user.login}
               iconRight="external-link"
               onPress={async () => {
-                /* handleOpenUrl(issue.html_url); */
                 await Linking.openURL(issue.html_url);
               }}
             />
