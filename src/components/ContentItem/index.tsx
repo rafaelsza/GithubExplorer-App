@@ -18,11 +18,7 @@ interface InfoProps {
   description: string;
 }
 
-const InformationsRepository: React.FC<InfoProps> = ({
-  image,
-  title,
-  description,
-}) => {
+const ContentItem: React.FC<InfoProps> = ({ image, title, description }) => {
   return (
     <Container>
       {!!image && (
@@ -41,4 +37,4 @@ const InformationsRepository: React.FC<InfoProps> = ({
   );
 };
 
-export default InformationsRepository;
+export default ContentItem;

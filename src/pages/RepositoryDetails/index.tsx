@@ -19,16 +19,12 @@ import api from '../../services/api';
 import logoBackground from '../../assets/github-background.png';
 import logoHeader from '../../assets/logo.png';
 
-import InformationsRepository from '../../components/InformationsRepository';
+import ContentItem from '../../components/ContentItem';
 import ItemList from '../../components/ItemList';
 
 import {
   Container,
   ViewRepository,
-  ImageRepository,
-  DataRepository,
-  TitleRepository,
-  DescriptionRepository,
   ViewData,
   ViewItemData,
   TitleItemData,
@@ -51,8 +47,7 @@ interface Params {
 
 const RepositoryDetails: React.FC = () => {
   const route = useRoute();
-  const routeParams = route.params as Params;
-  const { repository } = routeParams;
+  const { repository } = route.params as Params;
 
   const { removeRepository } = useRepository();
 
@@ -88,26 +83,13 @@ const RepositoryDetails: React.FC = () => {
         <Image source={logoHeader} />
 
         <ViewRepository>
-          <InformationsRepository
+          <ContentItem
             image={{ url: repository.owner.avatar_url, width: 84, height: 84 }}
             title={repository.full_name}
             description={repository.description}
           />
         </ViewRepository>
 
-        {/* <ViewRepository>
-          <ImageRepository
-            source={{
-              uri: repository.owner.avatar_url,
-            }}
-          />
-          <DataRepository>
-            <TitleRepository>{repository.full_name}</TitleRepository>
-            <DescriptionRepository>
-              {repository.description}
-            </DescriptionRepository>
-          </DataRepository>
-        </ViewRepository> */}
         <ViewData>
           <ViewItemData>
             <ValueItemData>{repository.stargazers_count}</ValueItemData>
@@ -145,8 +127,9 @@ const RepositoryDetails: React.FC = () => {
               title={issue.title}
               description={issue.user.login}
               iconRight="external-link"
-              onPress={() => {
-                handleOpenUrl(issue.html_url);
+              onPress={async () => {
+                /* handleOpenUrl(issue.html_url); */
+                await Linking.openURL(issue.html_url);
               }}
             />
           )}

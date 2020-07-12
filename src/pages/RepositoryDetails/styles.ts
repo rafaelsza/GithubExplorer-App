@@ -10,28 +10,6 @@ export const ViewRepository = styled.View`
   padding: 32px 0 0 0;
 `;
 
-export const ImageRepository = styled.Image`
-  width: 84px;
-  height: 84px;
-  border-radius: 100px;
-`;
-
-export const DataRepository = styled.View`
-  flex: 1;
-  padding: 0 16px;
-`;
-
-export const TitleRepository = styled.Text`
-  font-size: 18px;
-  font-weight: bold;
-  color: #3d3d4d;
-`;
-
-export const DescriptionRepository = styled.Text`
-  color: #a8a8b3;
-  font-size: 14px;
-`;
-
 export const ViewData = styled.View`
   flex-direction: row;
   justify-content: space-between;
