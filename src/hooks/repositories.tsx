@@ -79,13 +79,15 @@ const RepositoryProvider: React.FC = ({ children }) => {
 
   const removeRepository = useCallback(
     async (id: number) => {
-      setRepositories(state =>
-        state.filter(repository => repository.id !== id),
+      const newRepositories = repositories.filter(
+        repository => repository.id !== id,
       );
+
+      setRepositories(newRepositories);
 
       await AsyncStorage.setItem(
         '@GithubExplorerApp:repositories',
-        JSON.stringify(repositories),
+        JSON.stringify(newRepositories),
       );
     },
     [repositories],
